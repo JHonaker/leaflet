@@ -1050,7 +1050,7 @@ methods.addHeatLayer = function(lat, lng, intensity, layerId,  options) {
     ]);
   }
 
-  var heat = L.heatLayer(latlngs, options);
+  var heat = L.HeatLayer(latlngs, options);
   this.layerManager.addLayer(heat, "heatLayer", layerId);
 }
 
