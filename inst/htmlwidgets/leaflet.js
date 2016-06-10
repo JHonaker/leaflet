@@ -1319,6 +1319,35 @@ methods.clearTopoJSON = function () {
   this.layerManager.clearLayers("topojson");
 };
 
+methods.addHeatLayer = function(lat, lng, intensity, layerId,  options) {
+  
+  var df = dataframe.create()
+      .col('lat', lat)
+      .col('lng', lng)
+      .col('intensity', intensity);
+
+  var latlngs = [];
+  for ( var i = 0; i < df.nrow(); i++;) {
+    latlngs.push([
+      df.get(i, 'lat'),
+      df.get(i, 'lng'),
+      df.get(i, 'intensity')
+    ]);
+  }
+
+  var heat = L.heatLayer(latlngs, options);
+  this.layerManager.addLayer(heat, "heatLayer", layerId);
+};
+
+methods.removeHeatLayer = function(layerId) {
+  this.layerManager.removeLayer("heatLayer", layerId);
+};
+
+methods.clearHeatLayer = function() {
+  this.layerManger.clearLayers("heatLayer");
+};
+
+
 methods.addControl = function (html, position, layerId, classes) {
   function onAdd(map) {
     var div = _leaflet2.default.DomUtil.create("div", classes);
