@@ -1319,35 +1319,6 @@ methods.clearTopoJSON = function () {
   this.layerManager.clearLayers("topojson");
 };
 
-methods.addHeatLayer = function(lat, lng, intensity, layerId,  options) {
-  
-  var df = dataframe.create()
-      .col('lat', lat)
-      .col('lng', lng)
-      .col('intensity', intensity);
-
-  var latlngs = [];
-  for ( var i = 0; i < df.nrow(); i++;) {
-    latlngs.push([
-      df.get(i, 'lat'),
-      df.get(i, 'lng'),
-      df.get(i, 'intensity')
-    ]);
-  }
-
-  var heat = L.HeatLayer(latlngs, options);
-  this.layerManager.addLayer(heat, "heatLayer", layerId);
-};
-
-methods.removeHeatLayer = function(layerId) {
-  this.layerManager.removeLayer("heatLayer", layerId);
-};
-
-methods.clearHeatLayer = function() {
-  this.layerManger.clearLayers("heatLayer");
-};
-
-
 methods.addControl = function (html, position, layerId, classes) {
   function onAdd(map) {
     var div = _leaflet2.default.DomUtil.create("div", classes);
@@ -1855,6 +1826,31 @@ methods.addMeasure = function (options) {
 methods.removeMeasure = function () {
   this.measureControl.removeFrom(this);
   delete this.measureControl;
+};
+
+methods.addHeatLayer = function (lat, lng, intensity, layerId, group, options) {
+
+  var df = new _dataframe2.default().col("lat", lat).col("lng", lng).col("intensity", intensity);
+
+  var latlngs = [];
+  for (var i = 0; i < df.nrow(); i++) {
+    latlngs.push([df.get(i, "lat"), df.get(i, "lng"), df.get(i, "intensity")]);
+  }
+
+  var heat = _leaflet2.default.heatLayer(latlngs, options);
+  this.layerManager.addLayer(heat, "heat", layerId, group);
+};
+
+methods.setHeatLayerOptions = function (opts, layerId) {
+  this.layerManager.getLayer("heat", layerId).setOptions(opts);
+};
+
+methods.removeHeatLayer = function (layerId) {
+  this.layerManager.removeLayer("heat", layerId);
+};
+
+methods.clearHeatLayer = function () {
+  this.layerManger.clearLayers("heat");
 };
 
 

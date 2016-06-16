@@ -20,20 +20,22 @@ addHeatLayer <- function(
 
     invokeMethod(
        map, data, "addHeatLayer", pts$lat, pts$lng, intensity,
-       Filter(
-       Negate(is.null),
-       list(
-         minOpacity = minOpacity,
-         maxZoom = maxZoom,
-         max = max,
-         radius = radius,
-         blur = blur,
-         gradient = gradient
-     )),
-     layerId
-   ) %>%
-     expandLimits(pts$lat,pts$lng)
+       layerId, group,
+       Filter( Negate(is.null),
+              list(
+                  minOpacity = minOpacity,
+                  maxZoom = maxZoom,
+                  max = max,
+                  radius = radius,
+                  blur = blur,
+                  gradient = gradient))
+    ) %>% expandLimits(pts$lat,pts$lng)
 }
+
+setHeatLayerOptions <- function(map, opts, layerId = NULL) {
+    invokeMethod(map, NULL, 'setHeatLayerOptions', opts, layerId)
+}
+    
 
 removeHeatLayer <- function(map, layerId = NULL) {
     invokeMethod(map, getMapData(map), 'removeHeatLayer', layerId)

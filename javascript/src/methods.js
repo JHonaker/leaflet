@@ -1034,30 +1034,34 @@ methods.removeMeasure = function() {
   delete this.measureControl;
 };
 
-methods.addHeatLayer = function(lat, lng, intensity, layerId,  options) {
-  
-  var df = dataframe.create()
-      .col('lat', lat)
-      .col('lng', lng)
-      .col('intensity', intensity);
+methods.addHeatLayer = function(lat, lng, intensity, layerId, group, options) {
+
+  var df = new DataFrame()
+      .col("lat", lat)
+      .col("lng", lng)
+      .col("intensity", intensity);
 
   var latlngs = [];
-  for ( var i = 0; i < df.nrow(); i++;) {
+  for (var i = 0; i < df.nrow(); i++) {
     latlngs.push([
-      df.get(i, 'lat'),
-      df.get(i, 'lng'),
-      df.get(i, 'intensity')
+      df.get(i, "lat"),
+      df.get(i, "lng"),
+      df.get(i, "intensity")
     ]);
   }
+  
+  var heat = L.heatLayer(latlngs, options);
+  this.layerManager.addLayer(heat, "heat", layerId, group);
+};
 
-  var heat = L.HeatLayer(latlngs, options);
-  this.layerManager.addLayer(heat, "heatLayer", layerId);
-}
+methods.setHeatLayerOptions = function(opts, layerId) {
+  this.layerManager.getLayer("heat", layerId).setOptions(opts);
+};
 
 methods.removeHeatLayer = function(layerId) {
-  this.layerManager.removeLayer("heatLayer", layerId);
-}
+  this.layerManager.removeLayer("heat", layerId);
+};
 
 methods.clearHeatLayer = function() {
-  this.layerManger.clearLayers("heatLayer");
-}
+  this.layerManger.clearLayers("heat");
+};
